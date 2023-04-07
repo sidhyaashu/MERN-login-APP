@@ -4,7 +4,7 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 const connectDB =async()=>{
     try {
         const mongod = await MongoMemoryServer.create()
-        const getURI = mongod.getUri
+        const getURI = mongod.getUri()
         
         mongoose.set('strictQuery',true)
         const db = await mongoose.connect(getURI)
