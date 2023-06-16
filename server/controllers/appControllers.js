@@ -46,7 +46,7 @@ export const register =async(req,res)=>{
         })
 
         if(user){ 
-            res.status(200).send({message:"User register succefully"})
+            res.status(201).send({message:"User register succefully"})
         }else{
             res.status(400).send({message:"User not register"})
         }

@@ -4,7 +4,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import connectDB from './config/dbConn.js'
 import router from './routes/route.js'
-
+import errHandle from './middleware/errorHandler.js'
 
 const app = express()
 dotenv.config()
@@ -22,7 +22,8 @@ app.disable('x-powered-by')
 app.use('/api',router)
 
 
-
+app.use(errHandle.notFound)
+app.use(errHandle.errorHandler)
 
 
 

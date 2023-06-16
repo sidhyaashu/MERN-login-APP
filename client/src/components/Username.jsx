@@ -1,10 +1,14 @@
-import React from 'react'
-import { NavLink } from "react-router-dom";
+import React, { useEffect } from 'react'
+import { NavLink ,useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { Toaster } from "react-hot-toast";
 import { usernameValidate } from '../helper/validate'
+import { useAuthStore } from '../store/store'
 
 const Username = () => {
+
+  const setUsername = useAuthStore(state=>state.setUsername)
+  const navigate = useNavigate()
 
   const formik = useFormik({
     initialValues:{
@@ -14,7 +18,9 @@ const Username = () => {
     validateOnBlur:false,
     validateOnChange:false,
     onSubmit:async values=>{
-      console.log("Values -> ",values)
+      // console.log("Values -> ",values)
+      setUsername(values.username)
+      navigate('/password')
     }
   })
 
