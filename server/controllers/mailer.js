@@ -29,7 +29,7 @@ export const registerMail = async (req,res) =>{
     const { username ,userEmail , text , subject } = req.body
 
     //body of the email 
-    var email ={
+    let email ={
         body:{
             name:username,
             intro:text || "Welcome to sidhya login application",
@@ -37,7 +37,7 @@ export const registerMail = async (req,res) =>{
         }
     }
 
-    var emailBody = mailGenerator.generate(email);
+    let emailBody = mailGenerator.generate(email);
 
     let message ={
         from:ENV.EMAIL,

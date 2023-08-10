@@ -10,7 +10,9 @@ export default function useFetch(query){
     const [ getData,setData ] = useState({isLoading:false,apiData:undefined , status:null, serverError:null})
 
     useEffect(()=>{
-        if(!query) return;
+        if(!query) {
+            return;
+        }
 
         const fetchData = async()=>{
             try {

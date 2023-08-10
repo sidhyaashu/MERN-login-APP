@@ -49,8 +49,12 @@ export async function registerUser(creadentials){
 export async function verifyPassword({username,password}){
     try {
         if(username){
-            const { data } = await axios.post('/api/login',{username,password})
+            console.log("hii 3")
+            const  { data } = await axios.post('/api/login',{username,password})
+            console.log(data)
             return Promise.resolve({data})
+        }else{
+            console.log("No username")
         }
     } catch (error) {
         return Promise.reject({error:"Password dosen't match"})
@@ -61,7 +65,7 @@ export async function verifyPassword({username,password}){
 /**Update user profile function */
 export async function updateUser(response){
     try {
-        const token = await localStorage.getItem('token')
+        const token = localStorage.getItem('token')
         const data = await axios.put('/api/updateuser',response,{headers : {
             "Authorization":`Bearer ${token}`
         }})
@@ -94,13 +98,14 @@ export async function generateOTP(username){
 /** Verify OTP functions */
 export async function verifyOTP({username,code}){
     try {
-        const { data , status } = await axios.get('/api/verifyOTP',{ params:{username,code}})
-        return { data , status }
+        // const { data , status } = await axios.get('/api/verifyOTP',{ params:{username,code}})
+        // return { data , status }
     } catch (error) {
         return Promise.reject(error)
     }
 }
 
+        const { data , status } = await axios.get('/api/verifyOTP',{ params:{username,code}})
 
 /** Reset Password function */
 export async function resetPassword({ username , password}){

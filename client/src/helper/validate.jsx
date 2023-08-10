@@ -16,11 +16,15 @@ const usernameVerify=(error={},values)=>{
 export const usernameValidate=async(values)=>{
     const errors = usernameVerify({},values)
 
-    const { status } = await authenticate(values.username)
+    if(values.username){
+        const { status } = await authenticate(values.username)
 
 
-    if(status !== 200){
-        errors.exist = toast.error("User dosen't exist..!")
+        if(status !== 200){
+            errors.exist = toast.error("User dosen't exist..!")
+        }
+    }else{
+        console.log("No username in usernameValidate function")
     }
 
     return errors

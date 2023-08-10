@@ -1,16 +1,23 @@
-import React from 'react'
-import { NavLink } from "react-router-dom";
+import React, { useEffect } from 'react'
+import { NavLink , useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { Toaster } from "react-hot-toast";
+import  toast, { Toaster } from "react-hot-toast";
 import { passwordValidate } from '../helper/validate'
 import useFetch from '../hooks/fetch.hooks';
 import { useAuthStore } from '../store/store';
+import { verifyPassword } from '../helper/helper'
+
+
 
 const Password = () => {
 
-  const { username } = useAuthStore(state => state.auth.username)
-  const [{isLoading,apiData,serverError}] = useFetch(`/user/${username}`)
+  const navigate = useNavigate()
+  const  username  = useAuthStore(state => state.auth.username)
+  const [{isLoading,apiData,serverError}] = useFetch(`user/${username}`)
 
+  // useEffect(()=>{
+  //   console.log(username)
+  // })
 
   const formik = useFormik({
     initialValues:{
@@ -20,12 +27,27 @@ const Password = () => {
     validateOnBlur:false,
     validateOnChange:false,
     onSubmit:async values=>{
-      console.log("Values -> ",values)
+      let loginPromise = verifyPassword({username,password:values.password})
+      toast.promise(loginPromise,{
+        loading:"Cheking...!",
+        success: <b>Login Succesfullyyyyy</b>,
+        error: <b>Password dose't match</b>
+      });
+
+      console.log(loginPromise)
+
+
+      loginPromise.then(res=>{
+        let { token } = res.data
+        localStorage.setItem('token',token)
+        navigate('/profile')
+      })
+
     }
   })
 
-  if(isLoading) return <h1>Loading...!</h1>
-  if(serverError) return <h1>{serverError.message}</h1>
+  if(isLoading) { return <h1>Loading...!</h1> }
+  if(serverError) { return <h1>{serverError.message}</h1> }
 
 
   return (
@@ -45,7 +67,7 @@ const Password = () => {
             </div>
             <div className="textbox">
               <input {...formik.getFieldProps('password')} type="password" placeholder='Password' />
-              <button type='submit' >Sign Up</button>
+              <button type='submit' >Sign In</button>
             </div>
             <div>
               <span>Forgot password? <NavLink to="/recovery">Recover Now</NavLink></span>
