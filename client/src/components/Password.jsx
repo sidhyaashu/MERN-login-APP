@@ -14,11 +14,7 @@ const Password = () => {
   const navigate = useNavigate()
   const  username  = useAuthStore(state => state.auth.username)
   const [{isLoading,apiData,serverError}] = useFetch(`user/${username}`)
-  // console.log(`apiData ${apiData}`)
 
-  // useEffect(()=>{
-  //   console.log(username)
-  // })
 
   const formik = useFormik({
     initialValues:{
@@ -37,8 +33,8 @@ const Password = () => {
 
 
       loginPromise.then(res=>{
-        // console.log(res.data.user.token)
         let { token } = res.data.user
+        console.log(`Token - ${token}`)
         localStorage.setItem('token',token)
         navigate('/profile')
       })

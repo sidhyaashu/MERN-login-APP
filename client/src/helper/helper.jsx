@@ -40,7 +40,7 @@ export async function getUser({username}){
 export async function registerUser(creadentials){
     try {
         const { data :{message},status } = await axios.post(`/api/register`,creadentials)
-
+        console.log(`Data from register helper - ${data}`)
         let { username , email } = creadentials
         /**send email */
         if(status === 201 ){

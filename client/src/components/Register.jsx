@@ -23,7 +23,7 @@ const Register = () => {
     validateOnBlur:false,
     validateOnChange:false,
     onSubmit:async values=>{
-      values = Object.assign(values, { profile: file || '' })
+      values =await Object.assign(values, { profile: file || '' })
       let registerPromise = registerUser(values)
       toast.promise(registerPromise,{
         loading:"Creating...",
@@ -31,6 +31,7 @@ const Register = () => {
         error:<b>Could not Register</b>
       });
       registerPromise.then(function(){navigate('/')})
+      // console.log(values)
     }
   })
 

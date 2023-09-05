@@ -8,12 +8,6 @@ import { useAuthStore } from '../store/store'
 const Username = () => {
 
   const setUsername = useAuthStore( state => state.setUsername )
-  // const username = useAuthStore( state => state.auth.username )
-
-  // useEffect(()=>{
-  //   console.log(`Usernamme useEffect ${username}`)
-  // })
-
   const navigate = useNavigate()
 
   const formik = useFormik({

@@ -98,33 +98,19 @@ export const login =async(req,res)=>{
 //to get user
 export const getUser =async(req,res)=>{
     const { username } = req.params
-
+    console.log(username)
     try {
-        // if(!username) return res.status(501).send({error:"Can't find user data"})
-        // const user = await UserModel.findOne({username}).exec()
-        // if(!user) return res.status(400).send({error:"User Not Found"})
-        // //remove password from user
-        // //mongoose return unnecessary data with object so convert into it into json
-        // const {password ,...rest} = Object.assign({},user.toJSON())
-        // res.status(200).send({message:"User ",rest})
-
-
-      UserModel.findOne({ username }, function (err, user) {
-        if (err) {return res.status(500).send({ err });}
-        if (!user) {return res.status(501).send({ error: "Couldn't Find the User" });}
-
-        /** remove password from user */
-        // mongoose return unnecessary data with object so convert it into json
+        if(!username) return res.status(501).send({error:"Can't find user data"})
+        const user = await UserModel.findOne({username})
+        if(!user){
+            return res.status(501).send({ error: "Couldn't Find the User" });
+        }
         const { password, ...rest } = Object.assign({}, user.toJSON());
-
         return res.status(201).send(rest);
-      });
-
 
 
     } catch (error) {
-      console.log('appControolers')
-        return res.status(404).send({error:"Can't get Userdata",error})
+        return res.status(404).send({error:"Can't get Userdata"})
     }
 }
 

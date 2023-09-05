@@ -24,7 +24,7 @@ const Profile = () => {
     validateOnBlur:false,
     validateOnChange:false,
     onSubmit:async values=>{
-      values = await Object.assign(values,{profile:file || ''})
+      values =Object.assign(values,{profile:file || ''})
       console.log("Values -> ",values)
     }
   })
