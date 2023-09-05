@@ -1,7 +1,19 @@
 /** Make an api request */
 import axios from 'axios'
+import jwt_decode from 'jwt-decode'
 axios.defaults.baseURL = 'http://localhost:8000'
 // process.env.REACT_APP_SERVER_DOMAIN
+
+
+/**Get username */
+export async function getUsername(){
+    const token = localStorage.getItem('token')
+    if(!token) return Promise.reject("Can't find token")
+    let decode = jwt_decode(token)
+console.log(`return from helper helper jwt decode ${decode}`)
+    return decode
+}
+
 
 
 /** Authenticate functions */
@@ -49,9 +61,8 @@ export async function registerUser(creadentials){
 export async function verifyPassword({username,password}){
     try {
         if(username){
-            console.log("hii 3")
             const  { data } = await axios.post('/api/login',{username,password})
-            console.log(data)
+            console.log(`data -- ${data}`)
             return Promise.resolve({data})
         }else{
             console.log("No username")
@@ -98,14 +109,14 @@ export async function generateOTP(username){
 /** Verify OTP functions */
 export async function verifyOTP({username,code}){
     try {
-        // const { data , status } = await axios.get('/api/verifyOTP',{ params:{username,code}})
-        // return { data , status }
+        const { data , status } = await axios.get('/api/verifyOTP',{ params:{username,code}})
+        return { data , status }
     } catch (error) {
         return Promise.reject(error)
     }
 }
 
-        const { data , status } = await axios.get('/api/verifyOTP',{ params:{username,code}})
+        // const { data , status } = await axios.get('/api/verifyOTP',{ params:{username,code}})
 
 /** Reset Password function */
 export async function resetPassword({ username , password}){

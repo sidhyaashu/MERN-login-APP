@@ -14,6 +14,7 @@ const Password = () => {
   const navigate = useNavigate()
   const  username  = useAuthStore(state => state.auth.username)
   const [{isLoading,apiData,serverError}] = useFetch(`user/${username}`)
+  // console.log(`apiData ${apiData}`)
 
   // useEffect(()=>{
   //   console.log(username)
@@ -34,11 +35,10 @@ const Password = () => {
         error: <b>Password dose't match</b>
       });
 
-      console.log(loginPromise)
-
 
       loginPromise.then(res=>{
-        let { token } = res.data
+        // console.log(res.data.user.token)
+        let { token } = res.data.user
         localStorage.setItem('token',token)
         navigate('/profile')
       })

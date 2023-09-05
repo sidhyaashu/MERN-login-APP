@@ -11,7 +11,7 @@ export const verifyUser = async(req,res,next)=>{
         const {username } = req.method == "GET"? req.query : req.body
 
         let existUser = await UserModel.findOne({username})
-        if(!existUser) return res.status(404).send({error:"Can't get User"})
+        if(!existUser) {return res.status(404).send({error:"Can't get User"})}
 
         next()
         
@@ -27,15 +27,15 @@ export const register =async(req,res)=>{
     try {
         const { username,password,email,profile } = req.body
 
-        if(!username || !password || !email) return res.status(400).send({message:"All feild required !"})
+        if(!username || !password || !email) {return res.status(400).send({message:"All feild required !"})}
 
         const emailFormat = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-        if(!(email.match(emailFormat))) res.status(400).send({message:"Invalid Email Format...!"})
+        if(!(email.match(emailFormat))) {return res.status(400).send({message:"Invalid Email Format...!"})}
 
         const existUsername = await UserModel.findOne({username}).exec()
-        if(existUsername) return res.status(400).send({message:"Username already exist"})
+        if(existUsername) {return res.status(400).send({message:"Username already exist"})}
         const existEmail = await UserModel.findOne({email}).exec()
-        if(existEmail) return res.status(400).send({message:"Email already exist"})
+        if(existEmail) {return res.status(400).send({message:"Email already exist"})}
 
         const hashedpassword = await bcrypt.hash(password,10)
         const user = UserModel.create({
@@ -63,14 +63,14 @@ export const login =async(req,res)=>{
 
     try {
 
-        if(!password || !username) return res.status(400).send({message:"All feild required !"})
+        if(!password || !username) {return res.status(400).send({message:"All feild required !"})}
 
         const foundUser = await UserModel.findOne({username}).exec()
         if(!foundUser){
             res.status(400).send({message:"User not found"})
         }else if(foundUser){
             const matchPassword = await bcrypt.compare(password,foundUser.password)
-            if(!matchPassword) return res.status(200).send({message:"Password not matched"})
+            if(!matchPassword){ return res.status(200).send({message:"Password not matched"})}
 
             // jwt token
             const token  = jwt.sign({
@@ -100,17 +100,30 @@ export const getUser =async(req,res)=>{
     const { username } = req.params
 
     try {
-        if(!username) return res.status(501).send({error:"Can't find user data"})
+        // if(!username) return res.status(501).send({error:"Can't find user data"})
+        // const user = await UserModel.findOne({username}).exec()
+        // if(!user) return res.status(400).send({error:"User Not Found"})
+        // //remove password from user
+        // //mongoose return unnecessary data with object so convert into it into json
+        // const {password ,...rest} = Object.assign({},user.toJSON())
+        // res.status(200).send({message:"User ",rest})
 
-        const user = await UserModel.findOne({username}).exec()
-        if(!user) return res.status(400).send({error:"User Not Found"})
 
-        //remove password from user
-        //mongoose return unnecessary data with object so convert into it into json
-        const {password ,...rest} = Object.assign({},user.toJSON())
+      UserModel.findOne({ username }, function (err, user) {
+        if (err) {return res.status(500).send({ err });}
+        if (!user) {return res.status(501).send({ error: "Couldn't Find the User" });}
 
-        res.status(200).send({message:"User ",rest})
+        /** remove password from user */
+        // mongoose return unnecessary data with object so convert it into json
+        const { password, ...rest } = Object.assign({}, user.toJSON());
+
+        return res.status(201).send(rest);
+      });
+
+
+
     } catch (error) {
+      console.log('appControolers')
         return res.status(404).send({error:"Can't get Userdata",error})
     }
 }
@@ -122,10 +135,10 @@ export const updateUser =async(req,res)=>{
         //authenticate user id
         const { userId } = req.user
 
-        if(!userId) return res.status(400).send({error:"User Not Found...!"})
+        if(!userId) {return res.status(400).send({error:"User Not Found...!"})}
         const body = req.body
         const updateeduser = await UserModel.updateOne({_id:userId},body)
-        if(!updateeduser) return res.status(400).send({error:"User not update...!"})
+        if(!updateeduser) {return res.status(400).send({error:"User not update...!"})}
 
         res.status(200).send({message:"Update succsfully",updateeduser})
 
@@ -177,15 +190,15 @@ export const createResetSession =async(req,res)=>{
 //to reset password
 export const resetPassword =async(req,res)=>{
 
-    if(!req.app.locals.resetSession) return res.status(440).send({error:"Session expired!"})
+    if(!req.app.locals.resetSession) {return res.status(440).send({error:"Session expired!"})}
     try {
         const {username,password} = req.body
 
         const foundUser = await UserModel.findOne({username})
-        if(!foundUser) return res.status(400).send({error:"User Not Found...!"})
+        if(!foundUser) {return res.status(400).send({error:"User Not Found...!"})}
         const newPassword = await bcrypt.hash(password,10)
         const updatePassword = await UserModel.updateOne({username:foundUser.username},{password:newPassword})
-        if(!updatePassword) return res.status(400).send({error:"User not update...!"})
+        if(!updatePassword) {return res.status(400).send({error:"User not update...!"})}
 
         res.status(200).send({message:"Update succsfully"})
     } catch (error) {

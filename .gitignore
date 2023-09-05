@@ -9,7 +9,9 @@ lerna-debug.log*
 
 client/node_modules
 server/node_modules
-
+MERN_Login_App_with_ResetEmail
+db.txt
+server/.env
 
 
 dist
