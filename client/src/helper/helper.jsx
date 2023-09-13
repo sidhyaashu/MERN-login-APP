@@ -10,7 +10,6 @@ export async function getUsername(){
     const token = localStorage.getItem('token')
     if(!token) return Promise.reject("Can't find token")
     let decode = jwt_decode(token)
-console.log(`return from helper helper jwt decode ${decode}`)
     return decode
 }
 
@@ -37,21 +36,25 @@ export async function getUser({username}){
 }
 
 /** Register user function*/
-export async function registerUser(creadentials){
+export const  registerUser=async(creadentials)=>{
     try {
-        const { data :{message},status } = await axios.post(`/api/register`,creadentials)
+        console.log("1")
+        // const { data :{message},status } = await axios.post(`/api/register`,creadentials)
+        let { username , email,password } = creadentials
+        const resp = await axios.post(`/api/register`,{ username , email,password })
+        console.log(resp)
         console.log(`Data from register helper - ${data}`)
-        let { username , email } = creadentials
+        // let { username , email } = creadentials
         /**send email */
-        if(status === 201 ){
-            await axios.post('/api/registerMail',{
-                username,
-                userEmail : email,
-                text:message
-            })
-        }
+        // if(status === 201 ){
+        //     await axios.post('/api/registerMail',{
+        //         username,
+        //         userEmail : email,
+        //         text:message
+        //     })
+        // }
 
-        return Promise.resolve(message)
+        // return Promise.resolve(resp.message)
     } catch (error) {
         return Promise.reject({ error })
     }

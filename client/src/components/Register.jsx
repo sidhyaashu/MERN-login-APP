@@ -31,7 +31,6 @@ const Register = () => {
         error:<b>Could not Register</b>
       });
       registerPromise.then(function(){navigate('/')})
-      // console.log(values)
     }
   })
 

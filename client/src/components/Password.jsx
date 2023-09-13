@@ -34,7 +34,7 @@ const Password = () => {
 
       loginPromise.then(res=>{
         let { token } = res.data.user
-        console.log(`Token - ${token}`)
+        // console.log(`Token - ${token}`)
         localStorage.setItem('token',token)
         navigate('/profile')
       })
